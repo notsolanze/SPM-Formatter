@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPM Formatter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="w-full max-w-md space-y-4">
+        <!-- Input Field -->
+        <div class="bg-white rounded-2xl shadow-sm p-4">
+            <div id="inputField" contenteditable="true" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700" data-placeholder="Enter your message here..."></div>
+            <div class="flex gap-4 mt-2 border-t pt-3">
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyLeft">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyCenter">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyRight">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h7m5 6h7" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="removeFormat">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="italic">I</button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="bold">B</button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="underline">U</button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="strikeThrough">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Output Field -->
+        <div class="bg-white rounded-2xl shadow-sm p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm text-gray-500">Output</span>
+                <button id="copyButton" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                </button>
+            </div>
+            <div id="outputField" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700 uppercase" data-placeholder="UPPERCASE OUTPUT WILL APPEAR HERE..."></div>
+            <div class="flex gap-4 mt-2 border-t pt-3">
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyLeft">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyCenter">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="justifyRight">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h7m5 6h7" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="removeFormat">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="italic">I</button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="bold">B</button>
+                <button class="text-gray-500 hover:text-gray-700 font-bold" data-format="underline">U</button>
+                <button class="text-gray-500 hover:text-gray-700" data-format="strikeThrough">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const outputField = document.getElementById('outputField');
+        const copyButton = document.getElementById('copyButton');
+
+        // Function to update placeholder visibility
+        function updatePlaceholder(element) {
+            if (element.textContent.trim() === '') {
+                element.classList.add('empty');
+            } else {
+                element.classList.remove('empty');
+            }
+        }
+
+        // Initialize placeholders
+        updatePlaceholder(inputField);
+        updatePlaceholder(outputField);
+
+        // Input event listener
+        inputField.addEventListener('input', function() {
+            outputField.innerHTML = this.innerHTML.toUpperCase();
+            updatePlaceholder(inputField);
+            updatePlaceholder(outputField);
+        });
+
+        // Formatting buttons functionality
+        document.querySelectorAll('[data-format]').forEach(button => {
+            button.addEventListener('click', function() {
+                const format = this.getAttribute('data-format');
+                const targetField = this.closest('.bg-white').querySelector('[contenteditable], #outputField');
+                document.execCommand(format, false, null);
+                targetField.focus();
+            });
+        });
+
+        // Prevent default behavior for enter key
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.execCommand('insertLineBreak', false, null);
+            }
+        });
+
+        // Output event listener to maintain uppercase
+        outputField.addEventListener('input', function() {
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            const fragment = range.extractContents();
+            const span = document.createElement('span');
+            span.appendChild(fragment);
+            span.innerHTML = span.innerHTML.toUpperCase();
+            range.insertNode(span);
+            selection.removeAllRanges();
+            updatePlaceholder(outputField);
+        });
+
+        // Copy button functionality
+        copyButton.addEventListener('click', function() {
+            const textToCopy = outputField.innerHTML;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual feedback for successful copy
+                this.classList.add('text-green-500');
+                setTimeout(() => {
+                    this.classList.remove('text-green-500');
+                }, 1000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        });
+    </script>
+
+    <style>
+        [contenteditable][data-placeholder]:empty:before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+            pointer-events: none;
+        }
+    </style>
+</body>
+</html>
+
