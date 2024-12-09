@@ -157,7 +157,7 @@
 
         // Copy button functionality
         copyButton.addEventListener('click', function() {
-            const textToCopy = outputField.innerHTML;
+            const textToCopy = outputField.innerText; // Use innerText instead of innerHTML
             navigator.clipboard.writeText(textToCopy).then(() => {
                 // Visual feedback for successful copy
                 this.classList.add('text-green-500');
