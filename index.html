@@ -23,7 +23,7 @@
         <!-- Input Field -->
         <div class="bg-white rounded-2xl shadow-sm p-4">
             <div id="inputField" contenteditable="true" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700" data-placeholder="Enter your message here..."></div>
-            <div class="flex gap-4 mt-2 border-t pt-3">
+            <div class="flex flex-wrap gap-4 mt-2 border-t pt-3">
                 <button class="text-gray-500 hover:text-gray-700" data-format="justifyLeft">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -52,6 +52,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </button>
+                <select id="fontSize" class="text-gray-700 bg-gray-100 rounded px-2 py-1">
+                    <option value="">Font Size</option>
+                    <option value="1">Small</option>
+                    <option value="3">Normal</option>
+                    <option value="5">Large</option>
+                    <option value="7">Huge</option>
+                </select>
+                <select id="fontFamily" class="text-gray-700 bg-gray-100 rounded px-2 py-1">
+                    <option value="">Font Family</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                </select>
             </div>
         </div>
 
@@ -66,7 +81,7 @@
                 </button>
             </div>
             <div id="outputField" contenteditable="true" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700 uppercase" data-placeholder="UPPERCASE OUTPUT WILL APPEAR HERE..."></div>
-            <div class="flex gap-4 mt-2 border-t pt-3">
+            <div class="flex flex-wrap gap-4 mt-2 border-t pt-3">
                 <button class="text-gray-500 hover:text-gray-700" data-format="justifyLeft">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -107,6 +122,10 @@
         const outputField = document.getElementById('outputField');
         const copyButton = document.getElementById('copyButton');
         const hiddenTextarea = document.getElementById('hiddenTextarea');
+        const fontSizeSelect = document.getElementById('fontSize');
+        const fontFamilySelect = document.getElementById('fontFamily');
+        const outputFontSizeSelect = document.getElementById('outputFontSize');
+        const outputFontFamilySelect = document.getElementById('outputFontFamily');
 
         // Function to update placeholder visibility
         function updatePlaceholder(element) {
@@ -123,7 +142,9 @@
 
         // Input event listener
         inputField.addEventListener('input', function() {
-            outputField.innerHTML = this.innerHTML.toUpperCase();
+            let content = this.innerHTML;
+            content = content.replace(/&nbsp;/g, ' '); // Replace &nbsp; with regular space
+            outputField.innerHTML = content.toUpperCase();
             updatePlaceholder(inputField);
             updatePlaceholder(outputField);
         });
@@ -138,6 +159,28 @@
             });
         });
 
+        // Font size functionality
+        fontSizeSelect.addEventListener('change', function() {
+            document.execCommand('fontSize', false, this.value);
+            inputField.focus();
+        });
+
+        outputFontSizeSelect.addEventListener('change', function() {
+            document.execCommand('fontSize', false, this.value);
+            outputField.focus();
+        });
+
+        // Font family functionality
+        fontFamilySelect.addEventListener('change', function() {
+            document.execCommand('fontName', false, this.value);
+            inputField.focus();
+        });
+
+        outputFontFamilySelect.addEventListener('change', function() {
+            document.execCommand('fontName', false, this.value);
+            outputField.focus();
+        });
+
         // Prevent default behavior for enter key
         inputField.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -148,14 +191,22 @@
 
         // Output event listener to maintain uppercase
         outputField.addEventListener('input', function() {
+            let content = this.innerHTML;
+            content = content.replace(/&nbsp;/g, ' '); // Replace &nbsp; with regular space
+            content = content.toUpperCase();
+            
             const selection = window.getSelection();
             const range = selection.getRangeAt(0);
-            const fragment = range.extractContents();
-            const span = document.createElement('span');
-            span.appendChild(fragment);
-            span.innerHTML = span.innerHTML.toUpperCase();
-            range.insertNode(span);
+            const startOffset = range.startOffset;
+            
+            this.innerHTML = content;
+            
+            // Restore cursor position
+            range.setStart(this.childNodes[0], startOffset);
+            range.collapse(true);
             selection.removeAllRanges();
+            selection.addRange(range);
+            
             updatePlaceholder(outputField);
         });
 
