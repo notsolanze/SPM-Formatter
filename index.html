@@ -65,7 +65,7 @@
                     </svg>
                 </button>
             </div>
-            <div id="outputField" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700 uppercase" data-placeholder="UPPERCASE OUTPUT WILL APPEAR HERE..."></div>
+            <div id="outputField" contenteditable="true" class="w-full min-h-[100px] focus:outline-none placeholder-gray-400 text-gray-700 uppercase" data-placeholder="UPPERCASE OUTPUT WILL APPEAR HERE..."></div>
             <div class="flex gap-4 mt-2 border-t pt-3">
                 <button class="text-gray-500 hover:text-gray-700" data-format="justifyLeft">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,10 +99,14 @@
         </div>
     </div>
 
+    <!-- Hidden textarea for copying formatted text -->
+    <textarea id="hiddenTextarea" style="position: absolute; left: -9999px;"></textarea>
+
     <script>
         const inputField = document.getElementById('inputField');
         const outputField = document.getElementById('outputField');
         const copyButton = document.getElementById('copyButton');
+        const hiddenTextarea = document.getElementById('hiddenTextarea');
 
         // Function to update placeholder visibility
         function updatePlaceholder(element) {
@@ -128,7 +132,7 @@
         document.querySelectorAll('[data-format]').forEach(button => {
             button.addEventListener('click', function() {
                 const format = this.getAttribute('data-format');
-                const targetField = this.closest('.bg-white').querySelector('[contenteditable], #outputField');
+                const targetField = this.closest('.bg-white').querySelector('[contenteditable]');
                 document.execCommand(format, false, null);
                 targetField.focus();
             });
@@ -157,16 +161,32 @@
 
         // Copy button functionality
         copyButton.addEventListener('click', function() {
-            const textToCopy = outputField.innerText; // Use innerText instead of innerHTML
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // Visual feedback for successful copy
-                this.classList.add('text-green-500');
-                setTimeout(() => {
-                    this.classList.remove('text-green-500');
-                }, 1000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+            // Create a new element with the same styling as the output field
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = outputField.innerHTML;
+            tempElement.style.cssText = window.getComputedStyle(outputField, null).cssText;
+            tempElement.style.position = 'fixed';
+            tempElement.style.left = '-9999px';
+            document.body.appendChild(tempElement);
+
+            // Select the content of the temporary element
+            const range = document.createRange();
+            range.selectNodeContents(tempElement);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Copy the selected content
+            document.execCommand('copy');
+
+            // Remove the temporary element
+            document.body.removeChild(tempElement);
+
+            // Visual feedback for successful copy
+            this.classList.add('text-green-500');
+            setTimeout(() => {
+                this.classList.remove('text-green-500');
+            }, 1000);
         });
     </script>
 
